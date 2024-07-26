@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adapter-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adapter-webserver
+  template:
+    metadata:
+      labels:
+        app: adapter-webserver
+    spec:
+      volumes:
+        - name: adapter-configmap
+          configMap:
+            name: adapter-configmap
+            items:
+              - key: default.conf
+                path: default.conf
+      containers:
+        - name: webserver
+          image: nginx:1.25-alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d
+              name: adapter-configmap
+              readOnly: true
+        - name: adapter
+          image: nginx-prometheus-exporter:1.2
+          args: ["-nginx.scrape-uri","http://localhost/nginx_status"]
+          ports:
+            - containerPort: 9113
+          

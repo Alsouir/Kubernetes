@@ -1,0 +1,15 @@
+ apiVersion: v1
+ kind: Service
+ metadata:
+   name: adapter-service
+ spec:
+   type: ClusterIP
+   ports:
+     - targetPort: 80
+       port: 80
+       name: nginx
+     - targetPort: 9113
+       port: 9113
+       name: adapter
+   selector:
+     app: adapter-webserver

@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: adapter-ingress
+spec:
+  rules:
+  - host: adapter.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: adapter-service
+            port: 
+              number: 80
+      - path: /nginx_status
+        pathType: Prefix
+        backend:
+          service:
+            name: adapter-service
+            port:
+              number: 9113
+      - path: /metrics
+        pathType: Prefix
+        backend:
+          service:
+            name: adapter-service
+            port:
+              number: 9113
